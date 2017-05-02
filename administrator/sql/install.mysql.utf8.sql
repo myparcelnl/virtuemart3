@@ -14,7 +14,7 @@ PRIMARY KEY (`id`)
 ) DEFAULT COLLATE=utf8_general_ci;
 
 INSERT INTO `#__myparcel_config` (`id`, `ordering`, `state`, `checked_out`, `checked_out_time`, `created_by`) VALUES
-(1, 1, 0, 0, '0000-00-00 00:00:00', 388);
+(1, 1, 0, 0, '0000-00-00 00:00:00', 388) ON DUPLICATE KEY UPDATE id = 1;
 
 CREATE TABLE IF NOT EXISTS `orders_myparcel` (
   `orders_myparcel_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -37,5 +37,5 @@ CREATE TABLE IF NOT EXISTS `orders_myparcel_pg_address` (
 	`number_addition` varchar(255) COLLATE utf8_unicode_ci NULL,
 	`postcode` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
 	`town` varchar(255) COLLATE utf8_unicode_ci NULL,
-	PRIMARY KEY (`pg_address_id`));"
+	PRIMARY KEY (`pg_address_id`)
 );
