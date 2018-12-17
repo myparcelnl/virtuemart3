@@ -85,17 +85,27 @@
                 // NOTE: zorg dat pakjegemak zendingen naar Nederland gaan
                 // in dit voorbeeld vullen we de 'country' drop-down automatisch goed in
                 formulier['shipto_virtuemart_country_id'].value = 150;
-                parent.parent.window.opener.document.getElementById('shipto_virtuemart_country_id').style.display = 'block';
-                if (parent.parent.window.opener.document.getElementById('shipto_virtuemart_country_id_chzn')) { parent.parent.window.opener.document.getElementById('shipto_virtuemart_country_id_chzn').style.display = 'none'; }
+                var opener_document = parent.parent.window.opener.document;
+                if (opener_document.getElementById('shipto_virtuemart_country_id_field')) {
+                    opener_document.getElementById('shipto_virtuemart_country_id_field').style.display = 'block';
+                } else {
+                    opener_document.getElementById('shipto_virtuemart_country_id').style.display = 'block';
+                }
+                if(opener_document.getElementById('shipto_virtuemart_country_id_field_chzn')) {
+                    opener_document.getElementById('shipto_virtuemart_country_id_field_chzn').style.display = 'none';
+                } else if (opener_document.getElementById('shipto_virtuemart_country_id_chzn')) {
+                    opener_document.getElementById('shipto_virtuemart_country_id_chzn').style.display = 'none';
+                }
             }
         }
+
         /*------------ Since version 1.0.7 ----------*/
         var pg_data = new Array('pg_extra_name=' + shopname, 'pg_extra_street=' + street, 'pg_extra_house_number=' + houseNr, 'pg_extra_number_addition=' + houseNrAdd, 'pg_extra_postcode=' + postalCodeNum + postalCodeAlpha, 'pg_extra_town=' + city);
         loadXMLDoc(pg_data);
         /*--------------------------------------1.0.7*/
     }
-	
-	/*------------ Since version 1.0.7 ----------*/
+
+    /*------------ Since version 1.0.7 ----------*/
     function loadXMLDoc(pg_data) {
         var xmlhttp;
 

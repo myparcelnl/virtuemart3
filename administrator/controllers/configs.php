@@ -21,7 +21,7 @@ class MyparcelControllerConfigs extends JControllerAdmin
 	 * Proxy for getModel.
 	 * @since	1.6
 	 */
-	public function getModel($name = 'config', $prefix = 'MyparcelModel')
+	public function getModel($name = 'config', $prefix = 'MyparcelModel', $config = array())
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;

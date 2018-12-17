@@ -4,7 +4,7 @@
 * @purpose:   Installation of MyParcel Plugin
 *
 * @editors    MB
-* @version    1.0
+* @version    1.1.3
 * @since      Available since release 1.0
 * @support    info@myparcel.nl
 * @copyright  2011 MyParcel
@@ -14,7 +14,7 @@
 
 //require('includes/application_top.php');
 
-define('MYPARCEL_LINK', 'http://www.myparcel.nl/');
+define('MYPARCEL_LINK', 'https://www.myparcel.nl/');
 define( 'DS', DIRECTORY_SEPARATOR );
 define('TABLE_ORDERS','#__virtuemart_orders');
 $rootFolder = explode(DS,dirname(__FILE__));
@@ -36,13 +36,13 @@ if(is_dir($base_folder.DS.'libraries'.DS.'joomla'))
    require_once ( JPATH_BASE .DS.'includes'.DS.'defines.php' );
    require_once ( JPATH_BASE .DS.'includes'.DS.'framework.php' );
 }
-$db =& JFactory::getDBO();
+$db = JFactory::getDBO();
 
 /*
  *   FUNCTIONS
  */
 function getOrderz($virtuemart_order_id){
-		$db =& JFactory::getDBO();
+		$db = JFactory::getDBO();
 		$virtuemart_order_id = (int)$virtuemart_order_id;
 
 		$order = array();
@@ -91,13 +91,12 @@ $q = 'SELECT virtuemart_order_item_id, product_quantity, order_item_name,
 		$order['calc_rules'] = $db->loadObjectList();
 // 		vmdebug('getOrder my order',$order);
 		return $order;
-} 
+}
 
- 
 /* Since Pg_address drop number suffix */
 function isPgAddress($name, $street, $gkzip, $gkcity)
 {
-	$db =& JFactory::getDBO();
+	$db = JFactory::getDBO();
 	$query_pg_address = $db->setQuery(
 		sprintf('
                 SELECT * FROM `orders_myparcel_pg_address` WHERE `name`="%s" AND `street`="%s" AND `house_number`="%s" AND `postcode`="%s" AND `town`="%s" LIMIT 1'
@@ -189,7 +188,7 @@ if(isset($_GET['action']))
      *          Please save our bandwidth and use the Track&Trace link to get the actual status. Thanks
      */
 
-    /** START Since version 1.0.9 **/
+	/** START Since version 1.0.9 **/
 	if (version_compare(phpversion(), '5.4.0', '<')) {
 		if (session_id() == '') session_start();
 	} else {
@@ -200,7 +199,7 @@ if(isset($_GET['action']))
 
 	if (empty($_SESSION['MYPARCEL_VISIBLE_CONSIGNMENTS'])) {
 		$_SESSION['MYPARCEL_VISIBLE_CONSIGNMENTS'] = '';
-		$db     =& JFactory::getDBO();
+		$db     = JFactory::getDBO();
 		$query = "SELECT *  FROM orders_myparcel WHERE tnt_final = 0 AND tnt_updated_on < '" . date('Y-m-d H:i:s', time() - 43200) . "'";
 		$db->setQuery( $query );
 		$vendors = $db->loadObjectlist();
@@ -212,7 +211,7 @@ if(isset($_GET['action']))
 	}
 
 	/** END Since version 1.0.9 **/
-	
+
     if(
 		(isset($_SESSION['MYPARCEL_VISIBLE_CONSIGNMENTS']) && !empty($_SESSION['MYPARCEL_VISIBLE_CONSIGNMENTS'])) ||
 		!empty($all_consignments)
@@ -221,7 +220,7 @@ if(isset($_GET['action']))
 		if (empty($all_consignments)) {
 			$visible_consignments = str_replace('|', ',', trim($_SESSION['MYPARCEL_VISIBLE_CONSIGNMENTS'], '|'));
 
-			$db =& JFactory::getDBO();
+			$db = JFactory::getDBO();
 			$query = "SELECT *  FROM orders_myparcel WHERE consignment_id IN (" . $visible_consignments . ") AND tnt_final = 0 AND tnt_updated_on < '" . date('Y-m-d H:i:s', time() - 43200) . "'";
 			$db->setQuery($query);
 			$vendors = $db->loadObjectlist();
@@ -294,13 +293,13 @@ if(isset($_GET['action']))
         //$address = $order->delivery;
 	
 	
-	if (strlen($order['details']['ST']->virtuemart_country_id) > 0) {
+	if (isset($order['details']['ST']) && strlen($order['details']['ST']->virtuemart_country_id) > 0) {
 		  $gk_virtuemart_country_id = $order['details']['ST']->virtuemart_country_id; 
 	 } else {
 		 $gk_virtuemart_country_id = $order['details']['BT']->virtuemart_country_id; 
 	 }
 	
-	$db     =& JFactory::getDBO();
+	$db     = JFactory::getDBO();
 		$query = "SELECT country_2_code AS country_code FROM #__virtuemart_countries WHERE virtuemart_country_id='".$gk_virtuemart_country_id."' LIMIT 1";
 		//echo ($query);
 		$db->setQuery( $query );
@@ -321,57 +320,54 @@ SELECT countries_iso_code_2 AS country_code
 ");
         $country = tep_db_fetch_array($country_sql);*/
 
-if (strlen($order['details']['ST']->company) > 0) {
+if (isset($order['details']['ST']) &&  strlen($order['details']['ST']->company) > 0) {
 	$gkcompany = $order['details']['ST']->company; 
 } else {
 	$gkcompany = $order['details']['BT']->company; 
 }
 
-if (strlen($order['details']['ST']->zip) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->zip) > 0) {
 	$gkzip = $order['details']['ST']->zip; 
 } else {
 	$gkzip = $order['details']['BT']->zip; 
 }
 
-if (strlen($order['details']['ST']->city) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->city) > 0) {
 	$gkcity = $order['details']['ST']->city; 
 } else {
 	$gkcity = $order['details']['BT']->city; 
 }
 
-if (strlen($order['details']['ST']->email) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->email) > 0) {
 	$gkemail = $order['details']['ST']->email; 
 } else {
 	$gkemail = $order['details']['BT']->email; 
 }
 
-if (strlen($order['details']['ST']->first_name) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->first_name) > 0) {
 	$gkfirstname = $order['details']['ST']->first_name; 
 } else {
 	$gkfirstname = $order['details']['BT']->first_name; 
 }
-if (strlen($order['details']['ST']->last_name) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->last_name) > 0) {
 	$gklastname = $order['details']['ST']->last_name; 
 } else {
 	$gklastname = $order['details']['BT']->last_name; 
 }
-if (strlen($order['details']['ST']->address_1) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->address_1) > 0) {
 	$gkaddr = $order['details']['ST']->address_1; 
 } else {
 	$gkaddr = $order['details']['BT']->address_1; 
 }
-if (strlen($order['details']['ST']->phone_1) > 0) {
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->phone_1) > 0) {
 	$gkphone = $order['details']['ST']->phone_1; 
 } else {
 	$gkphone = $order['details']['BT']->phone_1; 
 }
 
-//$gkadresas_num = preg_replace('/\D/', '', $gkaddr);
-
-//$gkadresas_street = preg_replace('/[^A-Z a-z]/', '', $gkaddr);
-
 // Changes for version 1.0.5
-if (strlen($order['details']['ST']->middle_name) > 0) {
+
+if (isset($order['details']['ST']) && strlen($order['details']['ST']->middle_name) > 0) {
 	$gkmiddlename = $order['details']['ST']->middle_name;
 } else {
 	$gkmiddlename = $order['details']['BT']->middle_name;
@@ -379,39 +375,64 @@ if (strlen($order['details']['ST']->middle_name) > 0) {
 // And the line below: 'ToAddress[name]'            => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
 // --------------------1.0.5
 
+
+//$gkadresas_num = preg_replace('/\D/', '', $gkaddr);
+
+//$gkadresas_street = preg_replace('/[^A-Z a-z]/', '', $gkaddr);
         if($musu_country_code=='NL')
         {
-		
 			// Added on 2016-04-07
-			if (strlen($order['details']['ST']->address_1) > 0) {
+			if (isset($order['details']['ST']) && strlen($order['details']['ST']->address_2) > 0) {
 				$gkaddr2 = $order['details']['ST']->address_2;
 			} else {
 				$gkaddr2 = $order['details']['BT']->address_2;
 			}
 			$gkaddr .= (!empty($gkaddr2) ? ' ' . $gkaddr2 :'');
 			// End of 2016-04-07
-			
-            /*-------------------Since pg_address----------------*/
-			$street = getAddressComponents($gkaddr);
-			$pg_address = isPgAddress($gkcompany, $street, $gkzip, $gkcity);
 
-			if ($pg_address) {
-				$street['number_addition'] = '';
+			/*-------------------Since pg_address----------------*/
+			$raw_house_number = '';
+			$raw_number_addition = '';
+			$raw_street = '';
+			
+			if (@$order['details']['ST']->Toevoegingen != '' || @$order['details']['ST']->Huisnummer != '') {
+				$raw_house_number = @$order['details']['ST']->Huisnummer;
+				$raw_number_addition = @$order['details']['ST']->Toevoegingen;
+				$raw_street = (@$order['details']['ST']->address_2 != '') ? @$order['details']['ST']->address_2 : @$order['details']['ST']->address_1;
+			}
+
+			if (@$order['details']['BT']->Toevoegingen != '' || @$order['details']['BT']->Huisnummer != '') {
+				$raw_house_number = @$order['details']['BT']->Huisnummer;
+				$raw_number_addition = @$order['details']['BT']->Toevoegingen;
+				$raw_street = (@$order['details']['BT']->address_2 != '') ? @$order['details']['BT']->address_2 : @$order['details']['BT']->address_1;
+			}
+			
+			if($raw_house_number == '' && $raw_number_addition == '' && $raw_street == ''){
+				$street = getAddressComponents($gkaddr);
+				$pg_address = isPgAddress($gkcompany, $street, $gkzip, $gkcity);
+
+				if ($pg_address) {
+					$street['number_addition'] = '';
+				}
+
+				$raw_house_number = $street['house_number'];
+				$raw_number_addition = $street['number_addition'];
+				$raw_street = $street['street'];
 			}
 			/*----------------------------------------pg_address*/
-			
+
             $consignment = array(
             	'ToAddress[country_code]'    => $musu_country_code,
             	'ToAddress[name]'            => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
             	'ToAddress[business]'        => $gkcompany,
             	'ToAddress[postcode]'        => $gkzip,
-            	'ToAddress[house_number]'    => $street['house_number'],
-            	'ToAddress[number_addition]' => $street['number_addition'],
-            	'ToAddress[street]'          => $street['street'],
+            	'ToAddress[house_number]'    => $raw_house_number,
+            	'ToAddress[number_addition]' => $raw_number_addition,
+            	'ToAddress[street]'          => $raw_street,
             	'ToAddress[town]'            => $gkcity,
             	'ToAddress[email]'           => $gkemail,
             	'ToAddress[phone_number]' 	 => $gkphone,
-		'custom_id' => $order['details']['BT']->order_number,
+				'custom_id' => $order['details']['BT']->order_number,
             );
         }
         else // buitenland
@@ -425,16 +446,15 @@ if (strlen($order['details']['ST']->middle_name) > 0) {
 				$rezultatas = $db->loadResult();
 				$weight += $rezultatas*$val->product_quantity;
 			}
-			
+
 			// Changes for version 1.0.6
-			if (strlen($order['details']['ST']->address_1) > 0) {
+			if (isset($order['details']['ST']) && strlen($order['details']['ST']->address_2) > 0) {
 				$gkaddr2 = $order['details']['ST']->address_2;
 			} else {
 				$gkaddr2 = $order['details']['BT']->address_2;
 			}
-			// 'ToAddress[extraname]' 	  => $gkaddr2
 			// --------------------1.0.6
-			
+
             $consignment = array(
             	'ToAddress[country_code]' => $musu_country_code,
             	'ToAddress[name]'         => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
@@ -446,7 +466,7 @@ if (strlen($order['details']['ST']->middle_name) > 0) {
             	'ToAddress[phone_number]' => $gkphone,
 				'ToAddress[extraname]' 	  => $gkaddr2,
             	'weight'                  => $weight,
-		'custom_id' => $order['details']['BT']->order_number,
+				'custom_id' => $order['details']['BT']->order_number,
             );
             //print_r($consignment);
             //die;
@@ -479,7 +499,7 @@ if (strlen($order['details']['ST']->middle_name) > 0) {
      */
     if($_GET['action'] == 'return' || $_GET['action'] == 'retour')
     {
-      $db =& JFactory::getDBO();
+      $db = JFactory::getDBO();
         $order_id       = $_GET['order_id'];
         $timestamp      = $_GET['timestamp'];
         $consignment_id = $_GET['consignment_id'];
@@ -517,7 +537,7 @@ if (strlen($order['details']['ST']->middle_name) > 0) {
                         alert('No connection with osCommerce webshop');
                         return;
                     }
-                    window.opener.MyParcel.virtuemart.setConsignmentId('<?php echo $order_id; ?>', '<?php echo $timestamp; ?>', '<?php echo $consignment_id; ?>', '<?php echo $tracktrace_link; ?>', '<?php echo $retour; ?>', 'http://<?php echo $_SERVER["SERVER_NAME"]; ?>/');
+                    window.opener.MyParcel.virtuemart.setConsignmentId('<?php echo $order_id; ?>', '<?php echo $timestamp; ?>', '<?php echo $consignment_id; ?>', '<?php echo $tracktrace_link; ?>', '<?php echo $retour; ?>', 'http<?php echo ($_SERVER['HTTPS'] != "on"?'':'s');?>://<?php echo $_SERVER["SERVER_NAME"]; ?>/');
                     document.getElementById('close-window').style.display = 'block';
                 }
             </script>
@@ -579,15 +599,15 @@ SELECT countries_iso_code_2 AS country_code
   FROM " . TABLE_COUNTRIES . "
  WHERE countries_name = '" . $address['country'] . "'
 ");
-            $country = tep_db_fetch_array($country_sql);*/
+            $country = tep_db_fetch_array($country_sql);*/ 
 	    
-	    if (strlen($order['details']['ST']->virtuemart_country_id) > 0) {
+	    if (isset($order['details']['ST']) && strlen($order['details']['ST']->virtuemart_country_id) > 0) {
 		  $gk_virtuemart_country_id = $order['details']['ST']->virtuemart_country_id; 
 	 } else {
 		 $gk_virtuemart_country_id = $order['details']['BT']->virtuemart_country_id; 
 	 }
 	
-	$db     =& JFactory::getDBO();
+	$db     = JFactory::getDBO();
 		$query = "SELECT country_2_code AS country_code FROM #__virtuemart_countries WHERE virtuemart_country_id='".$gk_virtuemart_country_id."' LIMIT 1";
 		//echo ($query);
 		$db->setQuery( $query );
@@ -603,54 +623,54 @@ SELECT countries_iso_code_2 AS country_code
 		
 		
 		
-	        if (strlen($order['details']['ST']->company) > 0) {
+	        if (isset($order['details']['ST']) && strlen($order['details']['ST']->company) > 0) {
 			$gkcompany = $order['details']['ST']->company; 
 		} else {
 			$gkcompany = $order['details']['BT']->company; 
 		}
 		
-		if (strlen($order['details']['ST']->zip) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->zip) > 0) {
 			$gkzip = $order['details']['ST']->zip; 
 		} else {
 			$gkzip = $order['details']['BT']->zip; 
 		}
 		
-		if (strlen($order['details']['ST']->city) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->city) > 0) {
 			$gkcity = $order['details']['ST']->city; 
 		} else {
 			$gkcity = $order['details']['BT']->city; 
 		}
 		
-		if (strlen($order['details']['ST']->email) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->email) > 0) {
 			$gkemail = $order['details']['ST']->email; 
 		} else {
 			$gkemail = $order['details']['BT']->email; 
 		}
 		
-		if (strlen($order['details']['ST']->first_name) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->first_name) > 0) {
 			$gkfirstname = $order['details']['ST']->first_name; 
 		} else {
 			$gkfirstname = $order['details']['BT']->first_name; 
 		}
-		if (strlen($order['details']['ST']->last_name) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->last_name) > 0) {
 			$gklastname = $order['details']['ST']->last_name; 
 		} else {
 			$gklastname = $order['details']['BT']->last_name; 
 		}
 		// Changes for version 1.0.5
-		if (strlen($order['details']['ST']->middle_name) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->middle_name) > 0) {
 			$gkmiddlename = $order['details']['ST']->middle_name;
 		} else {
 			$gkmiddlename = $order['details']['BT']->middle_name;
 		}
 		// And the line below: 'ToAddress[name]'            => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
 		// --------------------1.0.5
-		if (strlen($order['details']['ST']->address_1) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->address_1) > 0) {
 			$gkaddr = $order['details']['ST']->address_1; 
 		} else {
 			$gkaddr = $order['details']['BT']->address_1; 
 		}
-		if (strlen($order['details']['ST']->phone_1) > 0) {
+		if (isset($order['details']['ST']) && strlen($order['details']['ST']->phone_1) > 0) {
 			$gkphone = $order['details']['ST']->phone_1; 
 		} else {
 			$gkphone = $order['details']['BT']->phone_1; 
@@ -659,19 +679,41 @@ SELECT countries_iso_code_2 AS country_code
 		if($musu_country_code=='NL')
 	    {
 			// Added on 2016-04-07
-			if (strlen($order['details']['ST']->address_1) > 0) {
+			if (isset($order['details']['ST']) && strlen($order['details']['ST']->address_2) > 0) {
 				$gkaddr2 = $order['details']['ST']->address_2;
 			} else {
 				$gkaddr2 = $order['details']['BT']->address_2;
 			}
 			$gkaddr .= (!empty($gkaddr2) ? ' ' . $gkaddr2 :'');
 			// End of 2016-04-07
-			
+
 			/*-------------------Since pg_address----------------*/
-			$street = getAddressComponents($gkaddr);
-			$pg_address = isPgAddress($gkcompany, $street, $gkzip, $gkcity);
-			if ($pg_address) {
-				$street['number_addition'] = '';
+			$raw_house_number = '';
+			$raw_number_addition = '';
+			$raw_street = '';
+
+			if (@$order['details']['ST']->Toevoegingen != '' || @$order['details']['ST']->Huisnummer != '') {
+				$raw_house_number = @$order['details']['ST']->Huisnummer;
+				$raw_number_addition = @$order['details']['ST']->Toevoegingen;
+				$raw_street = (@$order['details']['ST']->address_2 != '') ? @$order['details']['ST']->address_2 : @$order['details']['ST']->address_1;
+			}
+
+			if (@$order['details']['BT']->Toevoegingen != '' || @$order['details']['BT']->Huisnummer != '') {
+				$raw_house_number = @$order['details']['BT']->Huisnummer;
+				$raw_number_addition = @$order['details']['BT']->Toevoegingen;
+				$raw_street = (@$order['details']['BT']->address_2 != '') ? @$order['details']['BT']->address_2 : @$order['details']['BT']->address_1;
+			}
+			
+			if($raw_house_number == '' && $raw_number_addition == '' && $raw_street == ''){
+				$street = getAddressComponents($gkaddr);
+				$pg_address = isPgAddress($gkcompany, $street, $gkzip, $gkcity);
+				if ($pg_address) {
+					$street['number_addition'] = '';
+				}
+				
+				$raw_house_number = $street['house_number'];
+				$raw_number_addition = $street['number_addition'];
+				$raw_street = $street['street'];
 			}
 			/*----------------------------------------pg_address*/
 
@@ -681,15 +723,14 @@ SELECT countries_iso_code_2 AS country_code
 					'name'            => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
 					'business'        => $gkcompany,
 					'postcode'        => $gkzip,
-					'house_number'    => $street['house_number'],
-					'number_addition' => $street['number_addition'],
-					'street'          => $street['street'],
+					'house_number'    => $raw_house_number,
+					'number_addition' => $raw_number_addition,
+					'street'          => $raw_street,
 					'town'            => $gkcity,
 					'email'           => $gkemail,
 				),
 				'custom_id' => $order['details']['BT']->order_number,
 			);
-              
 		}
             else // buitenland
             {
@@ -712,29 +753,28 @@ SELECT op.products_quantity, p.products_weight
 				$rezultatas = $db->loadResult();
 				$weight += $rezultatas*$val->product_quantity;
 			}
-			
-			// Changes for version 1.0.6
-				if (strlen($order['details']['ST']->address_1) > 0) {
+			    // Changes for version 1.0.6
+				if (isset($order['details']['ST']) && strlen($order['details']['ST']->address_2) > 0) {
 					$gkaddr2 = $order['details']['ST']->address_2;
 				} else {
 					$gkaddr2 = $order['details']['BT']->address_2;
 				}
-			// --------------------1.0.6
-				
+				// --------------------1.0.6
+
                 $consignment = array(
                     'ToAddress' => array(
-					'country_code' => $musu_country_code,
-					'name'            => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
-					'business'     => $gkcompany,
-					'street'       => $gkaddr,
-					'eps_postcode' => $gkzip,
-					'town'         => $gkcity,
-					'email'        => $gkemail,
-					'phone_number' => $gkphone,
-					'extraname' 	  => $gkaddr2,
-				),
+						'country_code' => $musu_country_code,
+						'name'         => $gkfirstname. ($gkmiddlename ? " " . $gkmiddlename . " " : " ") .$gklastname,
+						'business'     => $gkcompany,
+						'street'       => $gkaddr,
+						'eps_postcode' => $gkzip,
+						'town'         => $gkcity,
+						'email'        => $gkemail,
+						'phone_number' => $gkphone,
+						'extraname' 	=> $gkaddr2,
+					),
                     'weight' => $weight,
-		    'custom_id' => $order['details']['BT']->order_number,
+		    		'custom_id' => $order['details']['BT']->order_number,
                 );
             }
             $formParams[$order_id] = serialize($consignment);
