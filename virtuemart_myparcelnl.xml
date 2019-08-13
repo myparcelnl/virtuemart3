@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.5" method="upgrade">
+    <name>com_virtuemart_myparcelnl</name>
+    <creationDate>2019-01-08</creationDate>
+    <copyright>Copyright (C) 2019. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <author>Rainy Phan</author>
+    <authorEmail>vu.phan@vn.devinition.com.com</authorEmail>
+    <authorUrl>https://www.myparcel.nl</authorUrl>
+    <version>2.0</version>
+    <description>MyParcelNL</description>   
+    <!-- Runs on install --> 
+    <!--<install> 
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>--> 
+    <!-- Runs on uninstall -->
+    <!--<uninstall> 
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>--> 
+	<!-- Runs on install/uninstall/update -->
+	<scriptfile>script.php</scriptfile>
+    <administration>
+        <menu img="components/com_virtuemart_myparcelnl/template/images/s_com_myparcel.png">MYPARCEL NL</menu>
+        <submenu>            
+			<menu link="option=com_virtuemart_myparcelnl&amp;view=configuration" view="configuration" img="components/com_virtuemart_myparcelnl/template/images/s_configs.png" alt="MyparcelNL/Configuration">Configurations</menu>
+        </submenu>
+        <files folder="administrator">
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>language</folder>
+            <folder>libraries</folder>
+			<folder>template</folder>
+			<folder>views</folder>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>index.html</filename>
+            <filename>virtuemart_myparcelnl.php</filename>
+            <filename>virtuemart_myparcelnl_helpers.php</filename>
+        </files>
+        <languages folder="administrator">            
+			<language tag="en-GB">language/en-GB.com_myparcel.ini</language>
+			<language tag="en-GB">language/en-GB.com_myparcel.sys.ini</language>
+        </languages>
+    </administration>
+	<files folder="components">
+		<filename>virtuemart_myparcelnl.php</filename>
+	</files>
+</extension>

@@ -18,14 +18,15 @@ class MyparcelHelper
 	/**
 	 * Configure the Linkbar.
 	 */
-	public static function addSubmenu($vName = '')
+	public static function getView()
 	{
-		/*JSubMenuHelper::addEntry(
-			JText::_('COM_MYPARCEL_TITLE_CONFIGS'),
-			'index.php?option=com_myparcel&view=configs',
-			$vName == 'configs'
-		);*/
+		$request = @$_REQUEST;
 
+		if(@$request['option'] == 'com_virtuemart_myparcelnl'){
+			return @$request['view'];
+		}
+
+		return '';
 	}
 
 	/**
@@ -39,7 +40,7 @@ class MyparcelHelper
 		$user	= JFactory::getUser();
 		$result	= new JObject;
 
-		$assetName = 'com_myparcel';
+		$assetName = 'com_virtuemart_myparcelnl';
 
 		$actions = array(
 			/*'core.admin', 'core.manage'*/
