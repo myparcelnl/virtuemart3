@@ -280,10 +280,10 @@ function exportMultiOrder($listOrderID = array()){
 			$person_last_name = (@$order['details']['ST']->last_name == '') ? @$order['details']['BT']->last_name : $order['details']['ST']->last_name;
 			$address_city = (@$order['details']['ST']->city == '') ? @$order['details']['BT']->city : $order['details']['ST']->city;
 			$address_zip = (@$order['details']['ST']->zip == '') ? @$order['details']['BT']->zip : $order['details']['ST']->zip;
-            $address_number = (@$order['details']['ST']->house_number == '') ? @$order['details']['BT']->house_number : $order['details']['ST']->house_number;
-            $address_number_suffix = (@$order['details']['ST']->house_number_add == '') ? @$order['details']['BT']->house_number_add : $order['details']['ST']->house_number_add;
+            		$address_number = (@$order['details']['ST']->house_number == '') ? @$order['details']['BT']->house_number : $order['details']['ST']->house_number;
+            		$address_number_suffix = (@$order['details']['ST']->house_number_add == '') ? @$order['details']['BT']->house_number_add : $order['details']['ST']->house_number_add;
 			$country_2_code = (@$order['details']['ST']->virtuemart_country_2_code == '') ? @$order['details']['BT']->virtuemart_country_2_code : $order['details']['ST']->virtuemart_country_2_code;
-            $company = (@$order['details']['ST']->company == '') ? @$order['details']['BT']->company : $order['details']['ST']->company;
+          		$company = (@$order['details']['ST']->company == '') ? @$order['details']['BT']->company : $order['details']['ST']->company;
 			$email = (@$order['details']['ST']->email == '') ? @$order['details']['BT']->email : $order['details']['ST']->email;
 			$phone_1 = (@$order['details']['ST']->phone_1 == '') ? @$order['details']['BT']->phone_1 : $order['details']['ST']->phone_1;
 			$phone_2 = (@$order['details']['ST']->phone_2 == '') ? @$order['details']['BT']->phone_2 : $order['details']['ST']->phone_2;
@@ -314,8 +314,8 @@ function exportMultiOrder($listOrderID = array()){
 				default: // 0
 					$streetAddress = getAddressComponents($address_1);
 					$number = @$streetAddress['house_number'];
-                    $number = (@$streetAddress['house_number'] == '') ? $address_number : @$streetAddress['house_number'];
-                    $number_suffix = (@$streetAddress['number_addition'] == '') ? $address_number_suffix : @$streetAddress['number_addition'];
+                    			$number = (@$streetAddress['house_number'] == '') ? $address_number : @$streetAddress['house_number'];
+                    			$number_suffix = (@$streetAddress['number_addition'] == '') ? (string) $address_number_suffix : @$streetAddress['number_addition'];
 			}
 			
 			// name
